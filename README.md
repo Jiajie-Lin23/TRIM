@@ -54,14 +54,15 @@ This performs core-tree-based decomposition with specified parameters.
 ### 2.3 Query Distance Between Node Pairs
 
 ```bash
-./run query-dis fb/ DBLP.txt 7 1
+./run query-dis fb/ DBLP.txt 7 1 1
 ```
 
 - `@1` — Input directory (same as decomposition output)  
 - `@2` — Graph file name  
 - `@3` — Tree-width allowed  
 - `@4` — Number of reference nodes (set to 1 in our experiment)
-
+- `@5` — Whether to compute the bound gap during traversal
+- 
 This runs landmark-based distance queries using the decomposed core tree.
 
 ---
