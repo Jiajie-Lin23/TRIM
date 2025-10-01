@@ -18,7 +18,7 @@
 #include <iostream>
 #include <functional>
 #include <chrono>
-#include <iomanip> 
+#include <iomanip>
 #include <sys/time.h>
 #include <algorithm>
 #include <cmath>
@@ -51,9 +51,9 @@ class VAL
 public:
 	VAL(int id, int val);
 	int id, val;
-	bool operator<(const VAL& v) const;
+	bool operator<(const VAL &v) const;
 };
-bool VAL::operator<(const VAL& v) const
+bool VAL::operator<(const VAL &v) const
 {
 	return val == v.val ? id < v.id : val > v.val;
 }
@@ -64,7 +64,6 @@ VAL::VAL(int id, int val)
 	this->val = val;
 }
 
-
 class DIS
 {
 public:
@@ -72,7 +71,7 @@ public:
 	DIS(int id, vector<int> dis);
 	int id;
 	vector<int> dis;
-	bool operator<(const DIS& v) const;
+	bool operator<(const DIS &v) const;
 	void clear()
 	{
 		dis.clear();
@@ -82,7 +81,7 @@ public:
 
 DIS::DIS(int id, vector<int> dis) : id(id), dis(dis) {}
 
-bool DIS::operator<(const DIS& v) const
+bool DIS::operator<(const DIS &v) const
 {
 	return id < v.id;
 }
@@ -95,7 +94,7 @@ public:
 public:
 	IntVal();
 	IntVal(int _x);
-	bool operator<(const IntVal& v) const;
+	bool operator<(const IntVal &v) const;
 };
 
 class DV
@@ -105,7 +104,7 @@ public:
 	DV(int id, double val);
 	int id;
 	double val;
-	bool operator<(const DV& v) const;
+	bool operator<(const DV &v) const;
 };
 
 class CM
@@ -129,9 +128,9 @@ class Val
 public:
 	Val(int id, int val);
 	int id, val;
-	bool operator<(const Val& v) const;
+	bool operator<(const Val &v) const;
 };
-bool Val::operator<(const Val& v) const
+bool Val::operator<(const Val &v) const
 {
 	return val == v.val ? id < v.id : val > v.val;
 }
@@ -144,7 +143,7 @@ Val::Val(int id, int val)
 struct MEM
 {
 	int cur, source, dis;
-	bool operator<(const MEM& other) const
+	bool operator<(const MEM &other) const
 	{
 		return dis > other.dis;
 	}
@@ -170,15 +169,15 @@ public:
 class CoreTree
 {
 public:
-	static inline bool get_edge(char* line, int& a, int& b, int& c, int num_cnt = 2);
+	static inline bool get_edge(char *line, int &a, int &b, int &c, int num_cnt = 2);
 	static inline int get_num_cnt(string path);
 	static void create_bin(string path, string graph_name, int rank_threads = 1,
-		int rank_method = RANK_STATIC, int rank_max_minutes = 1000000, int max_hops = 3, bool merge_equv = true, string bin_path = "");
-	static void get_order(vector<pair<int, int>>* con, int n, int* o, int method);
+						   int rank_method = RANK_STATIC, int rank_max_minutes = 1000000, int max_hops = 3, bool merge_equv = true, string bin_path = "");
+	static void get_order(vector<pair<int, int>> *con, int n, int *o, int method);
 
 public:
 	string path;
-	int** con, * dat, * deg, * nid, * old, * old_new, * new_old, * f;
+	int **con, *dat, *deg, *nid, *old, *old_new, *new_old, *f;
 	int n_org, n, n_core;
 	long long m, m_core;
 	int root_n;
@@ -234,23 +233,25 @@ public:
 	vector<vector<int>> Dij_dis;
 	vector<int> record_v;
 	vector<int> used_v;
+	vector<int> curGap;
+	queue<pair<int, int>> H;
 
 public:
-	//tree
+	// tree
 	void reduce(int max_w, int n_threads);
 	void decompose_tree(int max_w, int n_threads, string bin_path);
 	void create_tree();
 	void compute_tree_label();
-	void compute_tree_label(int x, int rsize, vector<TreeNode*>& s);
+	void compute_tree_label(int x, int rsize, vector<TreeNode *> &s);
 
-	//load
+	// load
 	void load_label(int max_w, string bin_path, int lambmark);
 	void load_label_tree(int max_w, string bin_path);
 	void save_label_tree(int max_w, string bin_path);
 	void save_tmp_graph(int max_w, string bin_path);
 	void load_tmp_graph(int max_w, string bin_path);
 
-	//reference
+	// reference
 	void init();
 	void create_landmark();
 	void select_landmark();
@@ -258,48 +259,50 @@ public:
 	void update_bound();
 	void assign_group();
 
-	//update_bound
+	// update_bound
 	inline void update_ub(int v, int ub);
 	inline void update_lb(int v, int lb);
 
-	//get_result
+	// get_result
 	int get_unmch(int lid);
 	int get_unmch();
 
-	//compute_ecc
-	void compute_ecc();
-	void compute_ecc(int lid, int& lambcnt, int& cnt, vector<int>& visited, vector<int>& node_vis, vector<int>& node_continue, int& max_id, int& max_lb);
-	int binarySearch(const vector<int>& arr, int target, int g_len, int d1, int d2);
+	// compute_ecc
+	void compute_ecc(bool flag);
+	void compute_ecc(int lid, int &lambcnt, int &cnt, vector<int> &visited, vector<int> &node_vis, vector<int> &node_continue, int &max_id, int &max_lb, bool flag);
+	void compute_ecc1(int lid, int &lambcnt, int &cnt, vector<int> &visited, vector<int> &node_vis, vector<int> &node_continue, int &max_id, int &max_lb, bool flag);
+	int binarySearch(const vector<int> &arr, int target, int g_len, int d1, int d2);
 	void Muti_Dijsktra(int u);
 
-	//save
+	// save
 	void txt_to_file(string graph_name);
 
 public:
-	pair<int, int>** core_con;
-	pair<int, int>* core_dat;
-	int* core_deg;
+	pair<int, int> **core_con;
+	pair<int, int> *core_dat;
+	int *core_deg;
 
 public:
-	tint* last_t;
-	int* dis;
+	tint *last_t;
+	int *dis;
 	tint nowt;
 
 public:
-	//calculate
+	// calculate
 	void init_query();
-	void Dijkstra(int u, vector<int>& distance);
-	bool Dijkstra_Judge(int u, vector<int>& node_vis, vector<int>& node_continue);
+	void Dijkstra(int u, vector<int> &distance);
+	bool Dijkstra_Judge(int u, int lid, int lambda, vector<int> &node_vis, vector<int> &node_continue);
+	bool Dijkstra_Judge1(int u, vector<int> &node_vis, vector<int> &node_continue);
 	void Local_Dijkstra(int u, int stamp);
-	void Local_Dijkstra(int u, int stamp, vector<vector<int>>& up_dis);
-	void Local_Dij(int u, int lambda, int lid);
+	void Local_Dijkstra(int u, int stamp, vector<vector<int>> &up_dis);
+	void Local_Dij(int u, int lambda, int lid, bool flag);
 	void Compute_root_dis(int u);
 	void Merge_root_dis();
 	void Compute_group();
-	bool check(int u, vector<int>& visited);
+	bool check(int u, vector<int> &visited, bool flag);
 };
 
-bool DV::operator<(const DV& v) const
+bool DV::operator<(const DV &v) const
 {
 	if (val > v.val + 1e-8)
 		return true;
@@ -320,10 +323,9 @@ DV::DV()
 	val = -1;
 }
 
-
 IntVal::IntVal() { x = -1; }
 IntVal::IntVal(int x) { this->x = x; }
-bool IntVal::operator<(const IntVal& v) const
+bool IntVal::operator<(const IntVal &v) const
 {
 	if (score[x] == score[v.x])
 		return x < v.x;
@@ -388,12 +390,12 @@ void CoreTree::init_query()
 	dis = new int[n_core];
 }
 
-void CoreTree::Dijkstra(int u, vector<int>& distance)
+void CoreTree::Dijkstra(int u, vector<int> &distance)
 {
 	priority_queue<pii, vector<pii>, greater<pii>> pq;
 	vector<int> vis;
 	vis.assign(n, 0);
-	pq.push({ 0, u });
+	pq.push({0, u});
 	distance.clear();
 	distance.assign(n, INT_MAX);
 
@@ -417,12 +419,12 @@ void CoreTree::Dijkstra(int u, vector<int>& distance)
 			if (d < distance[v])
 			{
 				distance[v] = d;
-				pq.push({ distance[v], v });
+				pq.push({distance[v], v});
 			}
 		}
 	}
 }
-bool CoreTree::Dijkstra_Judge(int u, vector<int>& node_vis, vector<int>& node_continue)
+bool CoreTree::Dijkstra_Judge(int u, int lid, int lambda, vector<int> &node_vis, vector<int> &node_continue)
 {
 	priority_queue<MEM> pq;
 	vector<int> nbr;
@@ -432,19 +434,22 @@ bool CoreTree::Dijkstra_Judge(int u, vector<int>& node_vis, vector<int>& node_co
 	stamp_dis++;
 	int group_index = node_g[u];
 	int left = group_l[group_index], right = group_r[group_index];
-	if (deg[u] == 2) {
+	if (deg[u] == 2)
+	{
 		if (node_continue[left] == 1 && node_continue[right] == 1)
 			return true;
-		if (!node_continue[left]) {
-			pq.push(MEM{ left,Dij_size,0 });
+		if (!node_continue[left])
+		{
+			pq.push(MEM{left, Dij_size, 0});
 			Dij_dis[left].resize(n);
 			Dij_dis[left][left] = 0;
 			Muti_Dijsktra_dis[Dij_size][left] = stamp_dis;
 			nbr.push_back(left);
 			Dij_size++;
 		}
-		if (!node_continue[right] && left != right) {
-			pq.push(MEM{ right,Dij_size,0 });
+		if (!node_continue[right] && left != right)
+		{
+			pq.push(MEM{right, Dij_size, 0});
 			Dij_dis[right].resize(n);
 			Dij_dis[right][right] = 0;
 			Muti_Dijsktra_dis[Dij_size][right] = stamp_dis;
@@ -454,8 +459,165 @@ bool CoreTree::Dijkstra_Judge(int u, vector<int>& node_vis, vector<int>& node_co
 		flag_chain = true;
 		left = group_mem[group_index].front(), right = group_mem[group_index].back();
 	}
-	else {
-		pq.push(MEM{ u,0,0 });
+	else
+	{
+		pq.push(MEM{u, 0, 0});
+		Dij_dis[u].resize(n);
+		Dij_dis[u][u] = 0;
+		Muti_Dijsktra_dis[Dij_size][u] = stamp_dis;
+		nbr.push_back(u);
+		flag_chain = false;
+		Dij_size++;
+	}
+	int aa = 0;
+	while (!pq.empty())
+	{
+		nnnn++;
+		MEM member = pq.top();
+		int cur = member.cur;
+		int source = member.source;
+		int nowDis = member.dis;
+		pq.pop();
+
+		if (Muti_Dijsktra_vis[source][cur] == stamp_vis)
+		{
+			continue;
+		}
+		Muti_Dijsktra_vis[source][cur] = stamp_vis;
+
+		if (flag_chain == false)
+		{
+			if (curGap[cur] != 0)
+			{
+				update_lb(cur, nowDis);
+				int gap = disLand[lid][cur] + lambda - V[cur].lb;
+				curGap[cur] = max(0, gap);
+			}
+			if (node_continue[cur] && d_l[cur] >= nowDis)
+			{
+				{
+					node_vis[u] = 1;
+					if (!node_continue[u])
+						vector<int>().swap(Dij_dis[u]);
+					return false;
+				}
+			}
+		}
+		else
+		{
+
+			for (int i = 0; i < Dij_size; i++)
+			{
+				if (source == i || (Muti_Dijsktra_vis[i][cur] != stamp_vis && !node_continue[nbr[i]] && left != right))
+					continue;
+				int u_index = binarySearch(group_d[group_index], (group_len[group_index] + Dij_dis[right][cur] - Dij_dis[left][cur]) / 2, group_len[group_index], Dij_dis[nbr[0]][cur], Dij_dis[nbr[1]][cur]);
+				int d = min(Dij_dis[left][cur] + group_d[group_index][u_index], Dij_dis[right][cur] + group_len[group_index] - group_d[group_index][u_index]);
+				if (Muti_Dijsktra_vis[0][cur] == stamp_vis && Muti_Dijsktra_vis[1][cur] == stamp_vis && curGap[cur] != 0)
+				{
+					update_lb(cur, d);
+					int gap = disLand[lid][cur] + lambda - V[cur].lb;
+					curGap[cur] = max(0, gap);
+				}
+				if (Muti_Dijsktra_vis[0][cur] == stamp_vis && Muti_Dijsktra_vis[1][cur] == stamp_vis)
+				{
+					if (node_continue[cur] && (d_l[cur] >= Dij_dis[nbr[0]][cur] || d_l[cur] >= Dij_dis[nbr[1]][cur]))
+					{
+						if (d_l[cur] >= d)
+						{
+							for (int i = 0; i < group_mem[group_index].size(); i++)
+							{
+								node_vis[group_mem[group_index][i]] = 1;
+							}
+							if (!node_continue[left])
+								vector<int>().swap(Dij_dis[left]);
+							if (!node_continue[right])
+								vector<int>().swap(Dij_dis[right]);
+							return false;
+						}
+					}
+					// if (Muti_Dijsktra_vis[0][cur] == stamp_vis && Muti_Dijsktra_vis[1][cur] == stamp_vis && curGap[cur] != 0)
+					// {
+					// 	update_lb(cur, d);
+					// 	int gap = disLand[lid][cur] + lambda - V[cur].lb;
+					// 	curGap[cur] = max(0, gap);
+					// }
+				}
+			}
+		}
+		update_lb(nbr[source], nowDis);
+		if (V[cur].lb < V[cur].ub)
+			d_l[nbr[source]] = min(d_l[nbr[source]], V[cur].lb - nowDis);
+		for (int i = 0; i < deg[cur]; i++)
+		{
+			int d = nowDis + weight[cur][i];
+			int v = con[cur][i];
+			if ((Muti_Dijsktra_dis[source][v] != stamp_dis) || (Dij_dis[nbr[source]][v] > d))
+			{
+				Muti_Dijsktra_dis[source][v] = stamp_dis;
+				Dij_dis[nbr[source]][v] = d;
+				pq.push(MEM{v, source, d});
+			}
+		}
+	}
+
+	if (deg[u] == 2)
+	{
+		for (int i = 0; i < group_mem[group_index].size(); i++)
+		{
+			node_vis[group_mem[group_index][i]] = 1;
+		}
+		V[left].ub = V[left].lb;
+		V[right].ub = V[right].lb;
+		node_continue[left] = node_continue[right] = 1;
+	}
+	else
+	{
+		node_vis[u] = 1;
+		node_continue[u] = 1;
+		V[u].ub = V[u].lb;
+		curGap[u] = 0;
+	}
+	return true;
+}
+
+bool CoreTree::Dijkstra_Judge1(int u, vector<int> &node_vis, vector<int> &node_continue)
+{
+	priority_queue<MEM> pq;
+	vector<int> nbr;
+	int Dij_size = 0;
+	bool flag_chain;
+	stamp_vis++;
+	stamp_dis++;
+	int group_index = node_g[u];
+	int left = group_l[group_index], right = group_r[group_index];
+	if (deg[u] == 2)
+	{
+		if (node_continue[left] == 1 && node_continue[right] == 1)
+			return true;
+		if (!node_continue[left])
+		{
+			pq.push(MEM{left, Dij_size, 0});
+			Dij_dis[left].resize(n);
+			Dij_dis[left][left] = 0;
+			Muti_Dijsktra_dis[Dij_size][left] = stamp_dis;
+			nbr.push_back(left);
+			Dij_size++;
+		}
+		if (!node_continue[right] && left != right)
+		{
+			pq.push(MEM{right, Dij_size, 0});
+			Dij_dis[right].resize(n);
+			Dij_dis[right][right] = 0;
+			Muti_Dijsktra_dis[Dij_size][right] = stamp_dis;
+			nbr.push_back(right);
+			Dij_size++;
+		}
+		flag_chain = true;
+		left = group_mem[group_index].front(), right = group_mem[group_index].back();
+	}
+	else
+	{
+		pq.push(MEM{u, 0, 0});
 		Dij_dis[u].resize(n);
 		Dij_dis[u][u] = 0;
 		Muti_Dijsktra_dis[Dij_size][u] = stamp_dis;
@@ -478,8 +640,10 @@ bool CoreTree::Dijkstra_Judge(int u, vector<int>& node_vis, vector<int>& node_co
 			continue;
 		}
 		Muti_Dijsktra_vis[source][cur] = stamp_vis;
-		if (flag_chain == false) {
-			if (node_continue[cur] && d_l[cur] >= nowDis) {
+		if (flag_chain == false)
+		{
+			if (node_continue[cur] && d_l[cur] >= nowDis)
+			{
 				{
 					node_vis[u] = 1;
 					if (!node_continue[u])
@@ -488,15 +652,20 @@ bool CoreTree::Dijkstra_Judge(int u, vector<int>& node_vis, vector<int>& node_co
 				}
 			}
 		}
-		else {
-			for (int i = 0;i < Dij_size;i++) {
+		else
+		{
+			for (int i = 0; i < Dij_size; i++)
+			{
 				if (source == i || (Muti_Dijsktra_vis[i][cur] != stamp_vis && !node_continue[nbr[i]] && left != right))
 					continue;
-				if (node_continue[cur] && (d_l[cur] >= Dij_dis[nbr[0]][cur] || d_l[cur] >= Dij_dis[nbr[1]][cur])) {
+				if (node_continue[cur] && (d_l[cur] >= Dij_dis[nbr[0]][cur] || d_l[cur] >= Dij_dis[nbr[1]][cur]))
+				{
 					int u_index = binarySearch(group_d[group_index], (group_len[group_index] + Dij_dis[right][cur] - Dij_dis[left][cur]) / 2, group_len[group_index], Dij_dis[nbr[0]][cur], Dij_dis[nbr[1]][cur]);
 					int d = min(Dij_dis[left][cur] + group_d[group_index][u_index], Dij_dis[right][cur] + group_len[group_index] - group_d[group_index][u_index]);
-					if (d_l[cur] >= d) {
-						for (int i = 0;i < group_mem[group_index].size();i++) {
+					if (d_l[cur] >= d)
+					{
+						for (int i = 0; i < group_mem[group_index].size(); i++)
+						{
 							node_vis[group_mem[group_index][i]] = 1;
 						}
 						if (!node_continue[left])
@@ -517,18 +686,21 @@ bool CoreTree::Dijkstra_Judge(int u, vector<int>& node_vis, vector<int>& node_co
 			{
 				Muti_Dijsktra_dis[source][v] = stamp_dis;
 				Dij_dis[nbr[source]][v] = d;
-				pq.push(MEM{ v, source, d });
+				pq.push(MEM{v, source, d});
 			}
 		}
 	}
 
-	if (deg[u] == 2) {
-		for (int i = 0;i < group_mem[group_index].size();i++) {
+	if (deg[u] == 2)
+	{
+		for (int i = 0; i < group_mem[group_index].size(); i++)
+		{
 			node_vis[group_mem[group_index][i]] = 1;
 		}
 		node_continue[left] = node_continue[right] = 1;
 	}
-	else {
+	else
+	{
 		node_vis[u] = 1;
 		node_continue[u] = 1;
 	}
@@ -540,7 +712,7 @@ void CoreTree::Local_Dijkstra(int u, int stamp)
 	priority_queue<pii, vector<pii>, greater<pii>> pq;
 
 	int nbr_size = tree[tree[u].rid].nbr.size();
-	pq.push({ 0, u });
+	pq.push({0, u});
 	Dijsktra_dis[u] = 0;
 	stamp_dis++;
 	stamp_vis++;
@@ -564,7 +736,7 @@ void CoreTree::Local_Dijkstra(int u, int stamp)
 				{
 					Dijsktra_dis[v] = Dijsktra_dis[cur] + update_dis[id_to_index[cur]][tree[tree[u].rid].nbr[i]];
 					stamp_d[v] = stamp_dis;
-					pq.push({ Dijsktra_dis[v], v });
+					pq.push({Dijsktra_dis[v], v});
 				}
 			}
 		}
@@ -576,20 +748,19 @@ void CoreTree::Local_Dijkstra(int u, int stamp)
 			{
 				Dijsktra_dis[v] = Dijsktra_dis[cur] + d;
 				stamp_d[v] = stamp_dis;
-				pq.push({ Dijsktra_dis[v], v });
+				pq.push({Dijsktra_dis[v], v});
 			}
 		}
 	}
-
 }
-void CoreTree::Local_Dijkstra(int u, int stamp, vector<vector<int>>& up_dis)
+void CoreTree::Local_Dijkstra(int u, int stamp, vector<vector<int>> &up_dis)
 {
 
 	int nbr_size = tree[tree[u].rid].nbr.size();
 	int m = 0;
 	priority_queue<pii, vector<pii>, greater<pii>> pq;
 	int cnt = 0;
-	pq.push({ 0, u });
+	pq.push({0, u});
 	Dijsktra_dis[u] = 0;
 	stamp_dis++;
 	stamp_vis++;
@@ -615,7 +786,7 @@ void CoreTree::Local_Dijkstra(int u, int stamp, vector<vector<int>>& up_dis)
 				{
 					Dijsktra_dis[v] = Dijsktra_dis[cur] + up_dis[id_to_index[cur]][i];
 					stamp_d[v] = stamp_dis;
-					pq.push({ Dijsktra_dis[v], v });
+					pq.push({Dijsktra_dis[v], v});
 				}
 			}
 		}
@@ -627,13 +798,13 @@ void CoreTree::Local_Dijkstra(int u, int stamp, vector<vector<int>>& up_dis)
 			{
 				Dijsktra_dis[v] = Dijsktra_dis[cur] + d;
 				stamp_d[v] = stamp_dis;
-				pq.push({ Dijsktra_dis[v], v });
+				pq.push({Dijsktra_dis[v], v});
 			}
 		}
 	}
 }
 
-void CoreTree::Local_Dij(int u, int lambda, int lid)
+void CoreTree::Local_Dij(int u, int lambda, int lid, bool flag)
 {
 	queue<int> toVisit;
 	int nbr_size = tree[tree[u].rid].nbr.size();
@@ -657,11 +828,29 @@ void CoreTree::Local_Dij(int u, int lambda, int lid)
 		if (lb < ub)
 		{
 			update_lb(id, dis);
+			// if (flag)
+			// {
+			int gap = disLand[lid][id] + lambda - V[id].lb;
+			curGap[id] = max(0, gap);
+			// }
+		}
+	}
+	if (flag)
+	{
+		while (!H.empty())
+		{
+			auto [g, id] = H.front();
+			if (curGap[id] == 0 || disLand[lid][id] + lambda - V[id].lb <= 0)
+			{
+				H.pop();
+			}
+			else
+				break;
 		}
 	}
 }
 
-bool CoreTree::check(int u, vector<int>& visited)
+bool CoreTree::check(int u, vector<int> &visited, bool flag)
 {
 	if (rank[u] == -1)
 	{
@@ -709,7 +898,7 @@ void CoreTree::Muti_Dijsktra(int u)
 	{
 		update_dis[i][nbr[i]] = 0;
 		Muti_Dijsktra_dis[i][nbr[i]] = stamp_dis;
-		pq.push(MEM{ nbr[i], i, 0 });
+		pq.push(MEM{nbr[i], i, 0});
 	}
 	if (pq.empty())
 		return;
@@ -751,7 +940,7 @@ void CoreTree::Muti_Dijsktra(int u)
 			{
 				Muti_Dijsktra_dis[source][v] = stamp_dis;
 				update_dis[source][v] = d;
-				pq.push(MEM{ v, source, d });
+				pq.push(MEM{v, source, d});
 			}
 		}
 
@@ -823,8 +1012,8 @@ void CoreTree::Compute_root_dis(int u)
 	vector<bool> used;
 	used.assign(root_dis[father_index].size(), 1);
 
-	sort(root_dis[father_index].begin(), root_dis[father_index].end(), [](const DIS& lhs, const DIS& rhs)
-		{ return lhs.dis > rhs.dis; });
+	sort(root_dis[father_index].begin(), root_dis[father_index].end(), [](const DIS &lhs, const DIS &rhs)
+		 { return lhs.dis > rhs.dis; });
 
 	for (int i = 0; i < root_dis[father_index].size(); i++)
 	{
@@ -867,8 +1056,8 @@ void CoreTree::Merge_root_dis()
 		sort(f[i].ve.begin(), f[i].ve.end());
 	}
 
-	sort(f.begin(), f.end(), [](const CM& a, const CM& b)
-		{
+	sort(f.begin(), f.end(), [](const CM &a, const CM &b)
+		 {
 			if (a.ve.size() == b.ve.size()) {
 				for (int i = 0; i < a.ve.size(); i++) {
 					if (a.ve[i] == b.ve[i]) continue;
@@ -916,25 +1105,31 @@ void CoreTree::Compute_group()
 	vector<int> vis;
 	int count = 0;
 	vis.resize(n, 0);
-	for (int i = 0;i < n;i++) {
-		if (deg[i] == 1 || deg[i] > 2) {
+	for (int i = 0; i < n; i++)
+	{
+		if (deg[i] == 1 || deg[i] > 2)
+		{
 			bool tmp_empty = false;
 			node_g[i] = group_l.size();
-			for (int j = 0;j < deg[i];j++) {
+			for (int j = 0; j < deg[i]; j++)
+			{
 				int right = con[i][j];
-				if (vis[right] || deg[right] > 2 || deg[right] == 1)continue;
-				vector<int> tmp = { i };
-				vector<int> dd = { 0 };
+				if (vis[right] || deg[right] > 2 || deg[right] == 1)
+					continue;
+				vector<int> tmp = {i};
+				vector<int> dd = {0};
 				int d = 0, curr = right, prev = i;
 				bool is_end = false;
 				tmp_empty = true;
 				d += weight[i][j];
 				node_g[right] = group_l.size();
 				vis[right] = 1;
-				while (!is_end) {
+				while (!is_end)
+				{
 					tmp.push_back(curr);
 					dd.push_back(d);
-					if (deg[curr] != 2) {
+					if (deg[curr] != 2)
+					{
 						is_end = true;
 						group_l.push_back(i);
 						group_r.push_back(curr);
@@ -943,10 +1138,13 @@ void CoreTree::Compute_group()
 						group_d[count] = dd;
 						count++;
 					}
-					else {
-						for (int k = 0; k < deg[curr]; k++) {
+					else
+					{
+						for (int k = 0; k < deg[curr]; k++)
+						{
 							int next = con[curr][k];
-							if (next != prev) {
+							if (next != prev)
+							{
 								d += weight[curr][k];
 								prev = curr;
 								curr = next;
@@ -960,9 +1158,10 @@ void CoreTree::Compute_group()
 					}
 				}
 			}
-			if (!tmp_empty) {
-				vector<int> tmp = { i };
-				vector<int> dd = { 0 };
+			if (!tmp_empty)
+			{
+				vector<int> tmp = {i};
+				vector<int> dd = {0};
 				group_l.push_back(i);
 				group_r.push_back(i);
 				group_len.push_back(1);
@@ -973,7 +1172,8 @@ void CoreTree::Compute_group()
 		}
 	}
 	group_size.resize(group_l.size());
-	for (int i = 0;i < group_l.size();i++) {
+	for (int i = 0; i < group_l.size(); i++)
+	{
 		group_size[i] = group_mem[i].size();
 	}
 }
@@ -985,7 +1185,7 @@ void CoreTree::save_tmp_graph(int max_w, string bin_path)
 	char stw[16];
 	sprintf(stw, "%d", max_w);
 
-	FILE* fout = fopen((bin_path + "tmp-" + string(stw) + ".bin").c_str(), "wb");
+	FILE *fout = fopen((bin_path + "tmp-" + string(stw) + ".bin").c_str(), "wb");
 	fwrite(&n, sizeof(int), 1, fout);
 	fwrite(&m_core, sizeof(long long), 1, fout);
 	fwrite(rank.data(), sizeof(int), n, fout);
@@ -1007,7 +1207,7 @@ void CoreTree::load_tmp_graph(int max_w, string bin_path)
 	char stw[16];
 	sprintf(stw, "%d", max_w);
 
-	FILE* fin = fopen((bin_path + "tmp-" + string(stw) + ".bin").c_str(), "rb");
+	FILE *fin = fopen((bin_path + "tmp-" + string(stw) + ".bin").c_str(), "rb");
 	fread(&n, sizeof(int), 1, fin);
 	n_core = 0;
 	fread(&m_core, sizeof(long long), 1, fin);
@@ -1017,7 +1217,7 @@ void CoreTree::load_tmp_graph(int max_w, string bin_path)
 	int n_bc = 0;
 	core_deg = new int[n];
 	core_dat = new pair<int, int>[m_core];
-	core_con = new pair<int, int>* [n];
+	core_con = new pair<int, int> *[n];
 	fread(core_deg, sizeof(int), n, fin);
 	fread(core_dat, sizeof(pair<int, int>), m_core, fin);
 	fclose(fin);
@@ -1030,7 +1230,7 @@ void CoreTree::save_label_tree(int max_w, string bin_path)
 	char stw[16];
 	sprintf(stw, "%d", max_w);
 
-	FILE* fout = fopen((bin_path + "label-tree-" + string(stw) + ".bin").c_str(), "wb");
+	FILE *fout = fopen((bin_path + "label-tree-" + string(stw) + ".bin").c_str(), "wb");
 	fwrite(&n, sizeof(int), 1, fout);
 	fwrite(rank.data(), sizeof(int), n, fout);
 
@@ -1045,7 +1245,7 @@ void CoreTree::save_label_tree(int max_w, string bin_path)
 	for (int i = 0; i < n; ++i)
 		if (rank[i] >= 0)
 		{
-			TreeNode& tn = tree[i];
+			TreeNode &tn = tree[i];
 			fwrite(&tn.rid, sizeof(int), 1, fout);
 			fwrite(&tn.rsize, sizeof(int), 1, fout);
 			fwrite(&tn.h, sizeof(int), 1, fout);
@@ -1060,14 +1260,13 @@ void CoreTree::save_label_tree(int max_w, string bin_path)
 	// printf("Tree Label Saved!\n");
 }
 
-
 void CoreTree::load_label_tree(int max_w, string bin_path)
 {
 	// printf("Loading Tree Label...\n");
 	char stw[16];
 	sprintf(stw, "%d", max_w);
 
-	FILE* fin = fopen((bin_path + "label-tree-" + string(stw) + ".bin").c_str(), "rb");
+	FILE *fin = fopen((bin_path + "label-tree-" + string(stw) + ".bin").c_str(), "rb");
 
 	fread(&n, sizeof(int), 1, fin);
 	rank.resize(n);
@@ -1088,7 +1287,7 @@ void CoreTree::load_label_tree(int max_w, string bin_path)
 	for (int i = 0; i < n; ++i)
 		if (rank[i] >= 0)
 		{
-			TreeNode& tn = tree[i];
+			TreeNode &tn = tree[i];
 			fread(&tn.rid, sizeof(int), 1, fin);
 			fread(&tn.rsize, sizeof(int), 1, fin);
 			fread(&tn.h, sizeof(int), 1, fin);
@@ -1125,7 +1324,6 @@ void CoreTree::decompose_tree(int max_w, int n_threads, string bin_path)
 	save_label_tree(max_w, bin_path);
 }
 
-
 void CoreTree::init()
 {
 	stamp_dis = 2;
@@ -1147,6 +1345,7 @@ void CoreTree::init()
 	node_g.resize(n, -1);
 	group_d.resize(n);
 	Dij_dis.resize(n);
+	curGap.resize(n, INT_MAX);
 	for (int i = 0; i < max(2, max_w); i++)
 	{
 		update_dis[i].assign(n, INT_MAX);
@@ -1160,13 +1359,12 @@ void CoreTree::init()
 		V[i].ub = POSINF;
 		V[i].lb = NEGINF;
 	}
-
 }
 
-void CoreTree::compute_tree_label(int x, int rsize, vector<TreeNode*>& s)
+void CoreTree::compute_tree_label(int x, int rsize, vector<TreeNode *> &s)
 {
 	s.push_back(&tree[x]);
-	TreeNode& tn = tree[x];
+	TreeNode &tn = tree[x];
 	tn.dis.resize(tn.h);
 	int pos = 0;
 	vector<int> p(tn.w);
@@ -1197,7 +1395,7 @@ void CoreTree::compute_tree_label(int x, int rsize, vector<TreeNode*>& s)
 		}
 	}
 	tn.dis[tn.h - 1] = 0;
-	for (int& u : tree[x].ch)
+	for (int &u : tree[x].ch)
 		compute_tree_label(u, rsize, s);
 	s.pop_back();
 }
@@ -1205,7 +1403,7 @@ void CoreTree::compute_tree_label(int x, int rsize, vector<TreeNode*>& s)
 void CoreTree::compute_tree_label()
 {
 	printf("Computing Tree Label...\n");
-	vector<TreeNode*> s;
+	vector<TreeNode *> s;
 	for (int v = 0; v < n; ++v)
 		if (rank[v] >= 0 && tree[v].f == -1)
 		{
@@ -1222,7 +1420,7 @@ void CoreTree::compute_tree_label()
 		{
 			t_size += tree[v].dis.size() * 1.0 * (sizeof(int) + sizeof(dint));
 			vector<pair<int, int>>().swap(E[v]);
-			for (auto& d : tree[v].dis)
+			for (auto &d : tree[v].dis)
 				maxdis = max(maxdis, (int)d);
 		}
 		else
@@ -1246,7 +1444,7 @@ void CoreTree::create_tree()
 	{
 		int x = ord[i];
 
-		TreeNode& tn = tree[x];
+		TreeNode &tn = tree[x];
 		v_pair.clear();
 		for (int j = 0; j < (int)nbr[x].size(); ++j)
 		{
@@ -1271,7 +1469,7 @@ void CoreTree::create_tree()
 		tn.id = x;
 		tn.f = -1;
 		tn.ch_n = 0;
-		for (auto& u : nbr[x])
+		for (auto &u : nbr[x])
 			if (rank[u] != -1 && (tn.f == -1 || rank[u] < rank[tn.f]))
 				tn.f = u;
 		if (tn.f == -1)
@@ -1283,7 +1481,6 @@ void CoreTree::create_tree()
 			tn.rsize = tn.w;
 			tn.anc.push_back(x);
 			root.push_back(x);
-
 		}
 		else
 		{
@@ -1363,13 +1560,13 @@ void CoreTree::reduce(int max_w, int n_threads)
 		ord.push_back(x);
 		q.erase(x);
 		rank[x] = r++;
-		for (auto& it : E[x])
+		for (auto &it : E[x])
 		{
 			nbr[x].push_back(it.first);
 			cost[x].push_back(it.second);
 		}
 
-		for (auto& y : nbr[x])
+		for (auto &y : nbr[x])
 		{
 			if (E[y].size() >= max_w * 2)
 			{
@@ -1457,12 +1654,12 @@ void CoreTree::load_graph(string bin_path)
 {
 	// printf("loading graph: %s\n", bin_path.c_str());
 	long long p = 0;
-	FILE* fin = fopen((bin_path + "graph-dis.bin").c_str(), "rb");
+	FILE *fin = fopen((bin_path + "graph-dis.bin").c_str(), "rb");
 	fread(&n, sizeof(int), 1, fin);
 	fread(&m, sizeof(long long), 1, fin);
 	deg = new int[n];
 	dat = new int[m];
-	con = new int* [n];
+	con = new int *[n];
 	nid = new int[n];
 	old = new int[n];
 	new_old = new int[n];
@@ -1493,11 +1690,11 @@ void CoreTree::load_graph(string bin_path)
 	// printf("graph loaded, n_org=%d, n=%d, m=%lld\n", n_org, n, m);
 }
 
-bool CoreTree::get_edge(char* line, int& a, int& b, int& c, int num_cnt)
+bool CoreTree::get_edge(char *line, int &a, int &b, int &c, int num_cnt)
 {
 	if (!isdigit(line[0]))
 		return false;
-	vector<char*> v_num;
+	vector<char *> v_num;
 	int len = (int)strlen(line);
 	for (int i = 0; i < len; ++i)
 		if (!isdigit(line[i]) && line[i] != '.')
@@ -1514,7 +1711,7 @@ bool CoreTree::get_edge(char* line, int& a, int& b, int& c, int num_cnt)
 
 int CoreTree::get_num_cnt(string path)
 {
-	FILE* fin = fopen((path).c_str(), "r");
+	FILE *fin = fopen((path).c_str(), "r");
 	char line[MAXLINE];
 	int cnt = 0, min_cnt = 100;
 
@@ -1522,7 +1719,7 @@ int CoreTree::get_num_cnt(string path)
 	{
 		if (!isdigit(line[0]))
 			continue;
-		vector<char*> v_num;
+		vector<char *> v_num;
 		int len = (int)strlen(line);
 		for (int i = 0; i < len; ++i)
 			if (!isdigit(line[i]) && line[i] != '.')
@@ -1538,14 +1735,14 @@ int CoreTree::get_num_cnt(string path)
 	return min_cnt;
 }
 
-void CoreTree::get_order(vector<pair<int, int>>* con, int n, int* o, int method)
+void CoreTree::get_order(vector<pair<int, int>> *con, int n, int *o, int method)
 {
 	printf("method=%d\n", method);
 	if (method == RANK_STATIC)
 	{
 		printf("Ranking Method = RANK_STATIC\n");
 		// return val
-		DV* f = new DV[n];
+		DV *f = new DV[n];
 		for (int i = 0; i < n; ++i)
 			f[i].id = i, f[i].val = con[i].size() * 1.0;
 		sort(f, f + n);
@@ -1558,7 +1755,7 @@ void CoreTree::get_order(vector<pair<int, int>>* con, int n, int* o, int method)
 void CoreTree::create_bin(string path, string graph_name, int rank_threads, int rank_method, int rank_max_minutes, int max_hops, bool merge_equv, string bin_path)
 {
 	string full_path = path + graph_name;
-	FILE* fin = fopen((full_path).c_str(), "r");
+	FILE *fin = fopen((full_path).c_str(), "r");
 	char line[MAXLINE];
 	int n = 0, a, b, c, num_cnt = get_num_cnt(full_path);
 	vector<pair<int, int>> el;
@@ -1581,7 +1778,7 @@ void CoreTree::create_bin(string path, string graph_name, int rank_threads, int 
 	fclose(fin);
 
 	cout << "origional node:" << n << endl;
-	vector<int>* con1 = new vector<int>[n];
+	vector<int> *con1 = new vector<int>[n];
 
 	printf("Deduplicating...\n");
 
@@ -1644,8 +1841,8 @@ void CoreTree::create_bin(string path, string graph_name, int rank_threads, int 
 		to_visit.pop();
 
 		for (vector<int>::iterator i = con1[n_id].begin();
-			i != con1[n_id].end();
-			i++)
+			 i != con1[n_id].end();
+			 i++)
 		{
 			if (vistied[*i] == 0)
 			{
@@ -1679,7 +1876,7 @@ void CoreTree::create_bin(string path, string graph_name, int rank_threads, int 
 
 	printf("# conn nodes=%d,m= %d\n", n, m);
 	m = 0;
-	vector<pair<int, int>>* con = new vector<pair<int, int>>[n];
+	vector<pair<int, int>> *con = new vector<pair<int, int>>[n];
 	vector<vector<int>> we;
 	we.resize(n);
 
@@ -1706,23 +1903,22 @@ void CoreTree::create_bin(string path, string graph_name, int rank_threads, int 
 	}
 	printf("n=%d %d\n", n, m);
 
-	vector<pair<int, int>>* conn = new vector<pair<int, int>>[n];
+	vector<pair<int, int>> *conn = new vector<pair<int, int>>[n];
 
-	long long* f1 = new long long[n];
+	long long *f1 = new long long[n];
 	memset(f1, 0, sizeof(long long) * n);
 
-	long long* f2 = new long long[n];
+	long long *f2 = new long long[n];
 	memset(f2, 0, sizeof(long long) * n);
-
 
 	for (int i = 0; i < n; ++i)
 		f1[i] = i, f2[i] = i;
 
 	printf("Reordering...\n");
-	int* f = new int[n];
+	int *f = new int[n];
 	get_order(con, n, f, rank_method);
 
-	int* old = new int[n], * nid = new int[n];
+	int *old = new int[n], *nid = new int[n];
 	for (int i = 0; i < n; ++i)
 		nid[f[i]] = i;
 	for (int i = 0; i < n; ++i)
@@ -1737,7 +1933,7 @@ void CoreTree::create_bin(string path, string graph_name, int rank_threads, int 
 	}
 	cout << "n:" << n << ",m:" << m << endl;
 	printf("Creating adjacency list...\n");
-	int* dat = new int[m], * deg = new int[n], ** adj = new int* [n];
+	int *dat = new int[m], *deg = new int[n], **adj = new int *[n];
 
 	long long pos = 0;
 	for (int i = 0; i < n; ++i)
@@ -1779,7 +1975,7 @@ void CoreTree::create_bin(string path, string graph_name, int rank_threads, int 
 
 	// printf("Saving binary...\n");
 
-	FILE* fout = fopen((bin_path + "graph-dis.bin").c_str(), "wb");
+	FILE *fout = fopen((bin_path + "graph-dis.bin").c_str(), "wb");
 	// cout << "n:" << n << endl;
 	fwrite(&n, sizeof(int), 1, fout);
 	fwrite(&m, sizeof(long long), 1, fout);
@@ -1830,13 +2026,13 @@ void CoreTree::distance_landmark()
 void CoreTree::update_bound()
 {
 	listLand.resize(numLand);
+	// cout << V[1].lb << "," << V[1].ub << endl;
 	for (int i = 0; i < numLand; ++i)
 	{
 		ListToIndex[i].assign(n, 0);
 		for (int j = 0; j < n; ++j)
 		{
 			listLand[i].push_back(Val(j, disLand[i][j]));
-			int old = V[j].lb;
 			update_lb(j, disLand[i][j]);
 		}
 		sort(listLand[i].begin(), listLand[i].end());
@@ -1844,9 +2040,18 @@ void CoreTree::update_bound()
 
 		for (int j = 0; j < n; ++j)
 		{
-			int old = V[j].lb;
 			update_lb(j, ecc - disLand[i][j]);
 			update_ub(j, ecc + disLand[i][j]);
+			int gap = V[j].ub - V[j].lb;
+			// if (j == 1)
+			// 	cout << V[j].lb << "," << V[j].ub << endl;
+			if (gap < curGap[j])
+			{
+
+				curGap[j] = gap;
+				if (curGap[j] != 0)
+					H.emplace(gap, j);
+			}
 		}
 		for (int j = 0; j < n; j++)
 		{
@@ -1904,20 +2109,25 @@ void CoreTree::update_ub(int v, int ub)
 		V[v].ub = ub;
 }
 
-int CoreTree::binarySearch(const vector<int>& arr, int target, int g_len, int d1, int d2) {
+int CoreTree::binarySearch(const vector<int> &arr, int target, int g_len, int d1, int d2)
+{
 	int u = -1;
 	auto lower = upper_bound(arr.begin(), arr.end(), target);
 	int maxx = 0;
-	if (lower != arr.begin()) {
+	if (lower != arr.begin())
+	{
 		int diff = min(d1 + *(lower - 1), d2 + g_len - *(lower - 1));
-		if (diff > maxx) {
+		if (diff > maxx)
+		{
 			maxx = diff;
 			u = (lower - 1) - arr.begin();
 		}
 	}
-	if (lower != arr.end()) {
+	if (lower != arr.end())
+	{
 		int diff = min(d1 + *lower, d2 + g_len - *lower);
-		if (diff > maxx) {
+		if (diff > maxx)
+		{
 			maxx = diff;
 			u = lower - arr.begin();
 		}
@@ -1927,7 +2137,7 @@ int CoreTree::binarySearch(const vector<int>& arr, int target, int g_len, int d1
 void CoreTree::txt_to_file(string graph_name)
 {
 	string file_name = "txt/" + graph_name;
-	FILE* out = fopen(file_name.c_str(), "w");
+	FILE *out = fopen(file_name.c_str(), "w");
 	if (out == NULL)
 	{
 		fprintf(stderr, "can't write the graph file \n");
@@ -1941,7 +2151,6 @@ void CoreTree::txt_to_file(string graph_name)
 	}
 
 	fclose(out);
-
 
 	// FILE* out1 = fopen("txt/BFS_result.txt", "w");
 	// if (out1 == NULL)
@@ -1965,7 +2174,7 @@ void CoreTree::txt_to_file(string graph_name)
 	// fclose(out1);
 }
 
-void CoreTree::compute_ecc()
+void CoreTree::compute_ecc(bool flag)
 {
 	int lambcnt = 0, cnt = 0, lid = 0, max_d, id = -1, max_id = -1, max_lb = -1;
 
@@ -1980,43 +2189,116 @@ void CoreTree::compute_ecc()
 	visited.resize(n);
 	active.assign(numLand, false);
 	d.resize(numLand, 0);
-	while (true)
+	if (flag)
 	{
-		compute_ecc(lid, lambcnt, cnt, visited, node_vis, node_continue, max_id, max_lb);
-		if (max_id != -1 && disLand[lid][max_id] + listLand[lid][lambcnt].val <= max_lb) {
-			break;
+		while (true)
+		{
+			// cout << lambcnt << "," << V[1].lb << "," << V[1].ub << endl;
+			compute_ecc(lid, lambcnt, cnt, visited, node_vis, node_continue, max_id, max_lb, flag);
+
+			auto [g, id] = H.front();
+			if (H.empty())
+				break;
+			lambcnt++;
 		}
-		lambcnt++;
+	}
+	else
+	{
+		while (true)
+		{
+			compute_ecc1(lid, lambcnt, cnt, visited, node_vis, node_continue, max_id, max_lb, flag);
+			if (max_id != -1 && disLand[lid][max_id] + listLand[lid][lambcnt].val <= max_lb)
+			{
+				break;
+			}
+			lambcnt++;
+		}
 	}
 }
 
-void CoreTree::compute_ecc(int lid, int& lambcnt, int& cnt, vector<int>& visited, vector<int>& node_vis, vector<int>& node_continue, int& max_id, int& max_lb)
+void CoreTree::compute_ecc(int lid, int &lambcnt, int &cnt, vector<int> &visited, vector<int> &node_vis, vector<int> &node_continue, int &max_id, int &max_lb, bool flag)
 {
 	int lambda = listLand[lid][lambcnt].val;
 	int uid = listLand[lid][lambcnt].id;
 	int group_index = node_g[uid];
 
-	// if (check(uid, visited))
-	// {
-	// 	Local_Dij(uid, lambda, lid);
-	// 	return;
-	// }
-	if (Dijkstra_Judge(uid, node_vis, node_continue)) {
+	if (check(uid, visited, flag))
+	{
+		Local_Dij(uid, lambda, lid, flag);
+		return;
+	}
+	if (Dijkstra_Judge(uid, lid, lambda, node_vis, node_continue))
+	{
+		cnt++;
+		while (!H.empty())
+		{
+			auto [g, id] = H.front();
+			if (curGap[id] == 0 || disLand[lid][id] + lambda - V[id].lb <= 0)
+			{
+				H.pop();
+			}
+			else
+				break;
+		}
+	}
+	else
+	{
+
+		if (lambcnt > 0)
+		{
+			int gap = listLand[lid][lambcnt - 1].val - listLand[lid][lambcnt].val;
+
+			while (!H.empty())
+			{
+				auto [g, id] = H.front();
+				if (curGap[id] - gap <= 0 || disLand[lid][id] + lambda - V[id].lb <= 0)
+				{
+					V[id].ub = V[id].lb;
+					curGap[id] = max(0, curGap[id] - gap);
+					H.pop();
+				}
+				else
+				{
+					curGap[id] = curGap[id] - gap;
+					break;
+				}
+			}
+		}
+		return;
+	}
+}
+
+void CoreTree::compute_ecc1(int lid, int &lambcnt, int &cnt, vector<int> &visited, vector<int> &node_vis, vector<int> &node_continue, int &max_id, int &max_lb, bool flag)
+{
+	int lambda = listLand[lid][lambcnt].val;
+	int uid = listLand[lid][lambcnt].id;
+	int group_index = node_g[uid];
+
+	if (check(uid, visited, flag))
+	{
+		Local_Dij(uid, lambda, lid, flag);
+		return;
+	}
+	if (Dijkstra_Judge1(uid, node_vis, node_continue))
+	{
 		cnt++;
 		int ecc = NEGINF, max_difference = 0;
 		int group_index = node_g[uid];
 		int left = group_l[group_index], right = group_r[group_index];
-		if (deg[uid] == 2) {
+		if (deg[uid] == 2)
+		{
 			for (int i = 0; i < nodeGroup[lid].size(); ++i)
 			{
 				int id = nodeGroup[lid][i];
 				int lb = V[id].lb, ub = V[id].ub;
 				int u, left_distance, right_distance;
-				if (node_g[id] == group_index || id == left || id == right) {
+				if (node_g[id] == group_index || id == left || id == right)
+				{
 					left_distance = Dij_dis[left][id];
 					right_distance = Dij_dis[right][id];
 				}
-				else {
+				else
+				{
 					u = binarySearch(group_d[group_index], (group_len[group_index] + Dij_dis[right][id] - Dij_dis[left][id]) / 2, group_len[group_index], Dij_dis[left][id], Dij_dis[right][id]);
 					left_distance = Dij_dis[left][id] + group_d[group_index][u];
 					right_distance = Dij_dis[right][id] + group_len[group_index] - group_d[group_index][u];
@@ -2025,13 +2307,15 @@ void CoreTree::compute_ecc(int lid, int& lambcnt, int& cnt, vector<int>& visited
 				{
 					int d = min(left_distance, right_distance);
 					update_lb(id, d);
-					if (V[id].lb == V[id].ub) {
-						swap(nodeGroup[lid][i], nodeGroup[lid].back());
-						nodeGroup[lid].pop_back();
-						i--;
-						continue;
-					}
-					if (disLand[lid][id] + lambda - V[id].lb > max_difference) {
+					// if (V[id].lb == V[id].ub)
+					// {
+					// 	swap(nodeGroup[lid][i], nodeGroup[lid].back());
+					// 	nodeGroup[lid].pop_back();
+					// 	i--;
+					// 	continue;
+					// }
+					if (disLand[lid][id] + lambda - V[id].lb > max_difference)
+					{
 						max_difference = disLand[lid][id] + lambda - V[id].lb;
 						max_id = id;
 						max_lb = V[id].lb;
@@ -2041,12 +2325,13 @@ void CoreTree::compute_ecc(int lid, int& lambcnt, int& cnt, vector<int>& visited
 				}
 			}
 		}
-		else {
+		else
+		{
 
-			for (int i = 0;i < n;i++) {
+			for (int i = 0; i < n; i++)
+			{
 				ecc = max(ecc, Dij_dis[uid][i]);
 			}
-			int old1 = V[uid].ub, old2 = V[uid].lb;
 			V[uid].lb = V[uid].ub = ecc;
 			for (int i = 0; i < nodeGroup[lid].size(); ++i)
 			{
@@ -2055,13 +2340,15 @@ void CoreTree::compute_ecc(int lid, int& lambcnt, int& cnt, vector<int>& visited
 				if (lb < ub)
 				{
 					update_lb(id, Dij_dis[uid][id]);
-					if (V[id].lb == V[id].ub) {
-						swap(nodeGroup[lid][i], nodeGroup[lid].back());
-						nodeGroup[lid].pop_back();
-						i--;
-						continue;
-					}
-					if (disLand[lid][id] + lambda - V[id].lb > max_difference) {
+					// if (V[id].lb == V[id].ub)
+					// {
+					// 	swap(nodeGroup[lid][i], nodeGroup[lid].back());
+					// 	nodeGroup[lid].pop_back();
+					// 	i--;
+					// 	continue;
+					// }
+					if (disLand[lid][id] + lambda - V[id].lb > max_difference)
+					{
 						max_difference = disLand[lid][id] + lambda - V[id].lb;
 						max_id = id;
 						max_lb = V[id].lb;
@@ -2071,7 +2358,8 @@ void CoreTree::compute_ecc(int lid, int& lambcnt, int& cnt, vector<int>& visited
 			}
 		}
 	}
-	else {
+	else
+	{
 		return;
 	}
 }
