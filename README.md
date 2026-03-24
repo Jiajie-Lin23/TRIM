@@ -65,4 +65,7 @@ This performs core-tree-based decomposition with specified parameters.
 - 
 This runs landmark-based distance queries using the decomposed core tree.
 
+## 📝 Note
+
+There is a minor error in the VLDB published version, specifically in Algorithm 2, lines 7 and 8. The corrected PDF (`VLDB.pdf`) has been placed in the repository folder.
 ---
